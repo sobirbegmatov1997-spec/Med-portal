@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Анемии — лекция / Камхунӣ — лексия</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B3A5C;
+    --navy-deep:#102742;
+    --bg:#F7F9FA;
+    --terracotta:#C84B31;
+    --terracotta-deep:#A53A24;
+    --ink:#2B2D2F;
+    --card:#E8E2D6;
+    --card-edge:#D8CFBC;
+    --line:#D9DEE2;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:'Spectral',serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  :focus-visible{outline:3px solid var(--terracotta);outline-offset:2px;}
+
+  /* ===== HEADER ===== */
+  header{position:sticky; top:0; z-index:100; background:var(--white); border-bottom:1px solid var(--line);}
+  .header-inner{max-width:1180px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:18px 24px;}
+  .logo{display:flex; align-items:center; gap:10px; font-size:1.1rem; font-weight:700; color:var(--navy);}
+  .logo-mark{width:34px;height:34px;border-radius:8px;background:var(--navy);display:flex;align-items:center;justify-content:center;color:var(--white); font-family:'JetBrains Mono',monospace; font-weight:600; flex-shrink:0;}
+  .back-link{display:flex; align-items:center; gap:8px; font-size:.88rem; font-weight:600; color:var(--navy); }
+  .back-link:hover{color:var(--terracotta-deep);}
+
+  .lang-switch{position:relative; display:flex; align-items:center; background:var(--navy-deep); border-radius:999px; padding:4px; width:138px; height:40px; overflow:hidden; flex-shrink:0;}
+  .lang-switch svg.ecg-line{position:absolute; top:0; left:0; width:100%; height:100%; opacity:.35; pointer-events:none;}
+  .lang-switch .ecg-path{stroke:#4DD0A8; stroke-width:1.5; fill:none; stroke-dasharray:300; stroke-dashoffset:300; animation:ecgDraw 2.6s linear infinite;}
+  @keyframes ecgDraw{0%{stroke-dashoffset:300;} 60%{stroke-dashoffset:0;} 100%{stroke-dashoffset:0;}}
+  .lang-switch .knob{position:absolute; top:4px; left:4px; width:65px; height:32px; border-radius:999px; background:var(--terracotta); transition:transform .35s cubic-bezier(.65,0,.35,1); z-index:1;}
+  .lang-switch[data-lang="tj"] .knob{ transform:translateX(65px); }
+  .lang-switch button{position:relative; z-index:2; flex:1; height:100%; background:transparent; border:none; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:600; color:#8FA3B8; letter-spacing:.04em; transition:color .3s;}
+  .lang-switch[data-lang="ru"] button.btn-ru, .lang-switch[data-lang="tj"] button.btn-tj{color:#fff;}
+  @media (prefers-reduced-motion: reduce){ .ecg-path{animation:none; stroke-dashoffset:0;} }
+
+  /* ===== LECTURE HEADER ===== */
+  .lecture-hero{max-width:880px; margin:0 auto; padding:48px 24px 32px;}
+  .code-tag{font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--terracotta-deep); letter-spacing:.05em; display:block; margin-bottom:14px;}
+  .lecture-hero h1{font-size:clamp(1.9rem,4vw,2.6rem); color:var(--navy-deep); font-weight:700; margin-bottom:16px; line-height:1.2;}
+  .lecture-hero .subtitle{font-size:1.02rem; color:#5A6168; max-width:640px;}
+  .meta-row{display:flex; gap:18px; margin-top:22px; flex-wrap:wrap;}
+  .meta-item{font-size:.82rem; color:#8B95A0; display:flex; align-items:center; gap:6px;}
+  .meta-item b{color:var(--navy); font-weight:600;}
+
+  .disclaimer{
+    max-width:880px; margin:0 auto 8px; padding:0 24px;
+  }
+  .disclaimer .box{
+    background:#FBF3EC; border:1px solid #ECD9C5; border-radius:10px;
+    padding:14px 18px; font-size:.85rem; color:#7A5230;
+  }
+
+  /* ===== TOC ===== */
+  .toc-wrap{max-width:880px; margin:32px auto 0; padding:0 24px;}
+  .toc{
+    background:var(--white); border:1px solid var(--line); border-radius:12px;
+    padding:22px 24px; display:flex; flex-direction:column; gap:4px;
+  }
+  .toc-title{font-family:'JetBrains Mono',monospace; font-size:.72rem; color:#8B95A0; letter-spacing:.06em; margin-bottom:10px;}
+  .toc a{font-size:.92rem; color:var(--navy); padding:7px 0; border-bottom:1px dashed var(--line); display:flex; gap:10px;}
+  .toc a:last-child{border-bottom:none;}
+  .toc a:hover{color:var(--terracotta-deep);}
+  .toc .num{font-family:'JetBrains Mono',monospace; color:var(--terracotta); font-weight:600; width:24px; flex-shrink:0;}
+
+  /* ===== LECTURE BODY ===== */
+  .lecture-body{max-width:880px; margin:40px auto; padding:0 24px;}
+  .lec-section{margin-bottom:48px; scroll-margin-top:90px;}
+  .lec-section .sec-eyebrow{font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--terracotta-deep); letter-spacing:.06em; margin-bottom:8px; display:block;}
+  .lec-section h2{font-size:1.5rem; color:var(--navy-deep); font-weight:600; margin-bottom:16px; padding-bottom:14px; border-bottom:2px solid var(--card);}
+  .lec-section h3{font-size:1.1rem; color:var(--navy); font-weight:600; margin:22px 0 10px;}
+  .lec-section p{color:#33373A; margin-bottom:14px; font-size:.97rem;}
+  .lec-section ul, .lec-section ol{margin:0 0 16px 0; padding-left:0; list-style:none;}
+  .lec-section ul li{position:relative; padding-left:22px; margin-bottom:9px; font-size:.95rem; color:#33373A;}
+  .lec-section ul li::before{content:"—"; position:absolute; left:0; color:var(--terracotta);}
+  .lec-section ol{counter-reset:step;}
+  .lec-section ol li{position:relative; padding-left:30px; margin-bottom:10px; font-size:.95rem; color:#33373A; counter-increment:step;}
+  .lec-section ol li::before{content:counter(step); position:absolute; left:0; top:0; width:20px; height:20px; background:var(--navy); color:#fff; border-radius:5px; font-family:'JetBrains Mono',monospace; font-size:.7rem; font-weight:600; display:flex; align-items:center; justify-content:center;}
+
+  /* data table */
+  .data-table{width:100%; border-collapse:collapse; margin:18px 0 20px; font-size:.88rem;}
+  .data-table th{background:var(--navy-deep); color:#fff; text-align:left; padding:10px 14px; font-weight:600; font-size:.78rem; letter-spacing:.02em;}
+  .data-table td{padding:10px 14px; border-bottom:1px solid var(--line); color:#33373A;}
+  .data-table tr:nth-child(even) td{background:#F5F7F8;}
+
+  /* highlight card inside lecture */
+  .clinical-note{
+    background:var(--card); border-left:5px solid var(--terracotta);
+    border-radius:0 8px 8px 0; padding:16px 20px; margin:18px 0;
+    font-size:.92rem; color:#4A4030;
+  }
+  .clinical-note b{color:var(--terracotta-deep);}
+
+  .chip-row{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 0;}
+  .chip{font-size:.72rem; padding:4px 10px; border-radius:999px; background:rgba(27,58,92,.08); color:var(--navy); font-weight:600;}
+
+  /* ===== NAV BETWEEN SECTIONS (mobile sticky) ===== */
+  .progress-track{height:3px; background:var(--line); position:sticky; top:75px; z-index:90;}
+  .progress-fill{height:100%; background:var(--terracotta); width:0%; transition:width .1s;}
+
+  footer{background:var(--navy-deep); color:#9FB0BF; padding:40px 24px; text-align:center; font-size:.82rem; margin-top:40px;}
+
+  [data-i18n]{transition:opacity .15s;}
+
+  @media (max-width:760px){
+    .header-inner{padding:14px 18px;}
+    .lecture-hero, .lecture-body, .toc-wrap{padding-left:18px; padding-right:18px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="back-link">
+      <span class="logo-mark mono">←</span>
+      <span data-i18n="back_label">К списку лекций</span>
+    </a>
+    <div class="lang-switch" id="langSwitch" data-lang="ru">
+      <svg class="ecg-line" viewBox="0 0 138 40" preserveAspectRatio="none">
+        <path class="ecg-path" d="M0,20 L20,20 L26,8 L32,32 L38,20 L138,20" />
+      </svg>
+      <div class="knob"></div>
+      <button class="btn-ru mono" data-lang-btn="ru">RU</button>
+      <button class="btn-tj mono" data-lang-btn="tj">TJ</button>
+    </div>
+  </div>
+</header>
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="lecture-hero">
+  <span class="code-tag mono">ANEMIA-01</span>
+  <h1 data-i18n="title">Анемии: классификация, диагностика, лечение</h1>
+  <p class="subtitle" data-i18n="subtitle">Лекция для студентов медицинских вузов. Разбираются основные виды анемий, алгоритм диагностического поиска и принципы терапии.</p>
+  <div class="meta-row">
+    <span class="meta-item" data-i18n="meta_level"><b>Уровень:</b> базовый курс терапии</span>
+    <span class="meta-item" data-i18n="meta_time"><b>Время:</b> ~40 минут</span>
+  </div>
+</div>
+
+<div class="disclaimer">
+  <div class="box" data-i18n="disclaimer_text">
+    Черновой учебный материал, подготовленный для предварительного ознакомления. Перед использованием на занятиях требует проверки преподавателем или специалистом — клинические рекомендации и дозировки могут меняться.
+  </div>
+</div>
+
+<div class="toc-wrap">
+  <nav class="toc">
+    <span class="toc-title mono" data-i18n="toc_label">СОДЕРЖАНИЕ ЛЕКЦИИ</span>
+    <a href="#def"><span class="num mono">01</span><span data-i18n="toc1">Определение и физиология</span></a>
+    <a href="#class"><span class="num mono">02</span><span data-i18n="toc2">Классификация анемий</span></a>
+    <a href="#iron"><span class="num mono">03</span><span data-i18n="toc3">Железодефицитная анемия</span></a>
+    <a href="#b12"><span class="num mono">04</span><span data-i18n="toc4">В12- и фолиеводефицитная анемия</span></a>
+    <a href="#hemolytic"><span class="num mono">05</span><span data-i18n="toc5">Гемолитические анемии</span></a>
+    <a href="#diagnosis"><span class="num mono">06</span><span data-i18n="toc6">Алгоритм диагностики</span></a>
+    <a href="#summary"><span class="num mono">07</span><span data-i18n="toc7">Ключевые выводы</span></a>
+  </nav>
+</div>
+
+<div class="lecture-body">
+
+  <div class="lec-section" id="def">
+    <span class="sec-eyebrow mono" data-i18n="s1_eyebrow">РАЗДЕЛ 01</span>
+    <h2 data-i18n="s1_h2">Определение и физиология</h2>
+    <p data-i18n="s1_p1">Анемия — снижение концентрации гемоглобина в крови ниже нормы для возраста и пола, часто сопровождающееся снижением количества эритроцитов и гематокрита. Это не самостоятельная болезнь, а синдром, который может быть проявлением десятков разных состояний.</p>
+    <p data-i18n="s1_p2">Основная функция эритроцитов — перенос кислорода от лёгких к тканям с помощью гемоглобина. При анемии способность крови переносить кислород снижается, и организм компенсирует это учащением сердцебиения и дыхания.</p>
+    <table class="data-table">
+      <tr><th data-i18n="t1_h1">Показатель</th><th data-i18n="t1_h2">Норма (мужчины)</th><th data-i18n="t1_h3">Норма (женщины)</th></tr>
+      <tr><td data-i18n="t1_r1c1">Гемоглобин (Hb)</td><td>130–160 г/л</td><td>120–150 г/л</td></tr>
+      <tr><td data-i18n="t1_r2c1">Эритроциты</td><td>4.0–5.5 ×10¹²/л</td><td>3.7–5.0 ×10¹²/л</td></tr>
+      <tr><td data-i18n="t1_r3c1">Гематокрит</td><td>40–48%</td><td>36–42%</td></tr>
+    </table>
+    <div class="clinical-note">
+      <b data-i18n="note1_b">Важно:</b> <span data-i18n="note1_text">диагноз анемии ставится по уровню гемоглобина и гематокрита, а её причина устанавливается дальнейшим обследованием — это две разные задачи.</span>
+    </div>
+  </div>
+
+  <div class="lec-section" id="class">
+    <span class="sec-eyebrow mono" data-i18n="s2_eyebrow">РАЗДЕЛ 02</span>
+    <h2 data-i18n="s2_h2">Классификация анемий</h2>
+    <p data-i18n="s2_p1">Анемии классифицируют по нескольким признакам одновременно — это помогает быстрее сузить диагностический поиск.</p>
+    <h3 data-i18n="s2_h3a">По размеру эритроцитов (MCV)</h3>
+    <ul>
+      <li data-i18n="s2_li1">Микроцитарная (MCV &lt; 80 фл) — чаще железодефицитная, талассемия</li>
+      <li data-i18n="s2_li2">Нормоцитарная (MCV 80–100 фл) — анемия при хронических заболеваниях, острая кровопотеря, гемолиз</li>
+      <li data-i18n="s2_li3">Макроцитарная (MCV &gt; 100 фл) — В12-дефицитная, фолиеводефицитная анемия</li>
+    </ul>
+    <h3 data-i18n="s2_h3b">По механизму развития</h3>
+    <ul>
+      <li data-i18n="s2_li4">Анемии вследствие кровопотери (острой или хронической)</li>
+      <li data-i18n="s2_li5">Анемии вследствие нарушенного образования эритроцитов (дефицит железа, В12, фолиевой кислоты, угнетение костного мозга)</li>
+      <li data-i18n="s2_li6">Анемии вследствие повышенного разрушения эритроцитов (гемолитические)</li>
+    </ul>
+  </div>
+
+  <div class="lec-section" id="iron">
+    <span class="sec-eyebrow mono" data-i18n="s3_eyebrow">РАЗДЕЛ 03</span>
+    <h2 data-i18n="s3_h2">Железодефицитная анемия</h2>
+    <p data-i18n="s3_p1">Самая частая форма анемии в мире. Развивается, когда расход или потеря железа превышает его поступление с пищей.</p>
+    <h3 data-i18n="s3_h3a">Частые причины</h3>
+    <ul>
+      <li data-i18n="s3_li1">Хроническая кровопотеря (обильные менструации, кровотечения из ЖКТ)</li>
+      <li data-i18n="s3_li2">Повышенная потребность (беременность, рост у детей)</li>
+      <li data-i18n="s3_li3">Недостаточное поступление железа с пищей</li>
+      <li data-i18n="s3_li4">Нарушение всасывания железа (заболевания кишечника)</li>
+    </ul>
+    <h3 data-i18n="s3_h3b">Диагностика</h3>
+    <p data-i18n="s3_p2">Ключевые лабораторные признаки: снижение ферритина, снижение сывороточного железа, повышение общей железосвязывающей способности сыворотки (ОЖСС), микроцитарные гипохромные эритроциты в мазке крови.</p>
+    <h3 data-i18n="s3_h3c">Принципы лечения</h3>
+    <ol>
+      <li data-i18n="s3_ol1">Найти и устранить источник потери железа</li>
+      <li data-i18n="s3_ol2">Назначить препараты железа внутрь (предпочтительно) или внутривенно при непереносимости/нарушении всасывания</li>
+      <li data-i18n="s3_ol3">Контроль гемоглобина и ферритина в динамике для оценки эффективности терапии</li>
+    </ol>
+    <div class="chip-row">
+      <span class="chip" data-i18n="chip_micro">Микроцитарная</span>
+      <span class="chip" data-i18n="chip_common">Самая частая форма</span>
+    </div>
+  </div>
+
+  <div class="lec-section" id="b12">
+    <span class="sec-eyebrow mono" data-i18n="s4_eyebrow">РАЗДЕЛ 04</span>
+    <h2 data-i18n="s4_h2">В12- и фолиеводефицитная анемия</h2>
+    <p data-i18n="s4_p1">Возникает из-за нарушения синтеза ДНК в созревающих эритроцитах, из-за чего они становятся крупными (макроцитоз) и не успевают полностью созреть.</p>
+    <h3 data-i18n="s4_h3a">Частые причины дефицита В12</h3>
+    <ul>
+      <li data-i18n="s4_li1">Пернициозная анемия (аутоиммунное поражение слизистой желудка, дефицит внутреннего фактора)</li>
+      <li data-i18n="s4_li2">Состояние после резекции желудка или подвздошной кишки</li>
+      <li data-i18n="s4_li3">Строгая вегетарианская/веганская диета без добавок</li>
+    </ul>
+    <div class="clinical-note">
+      <b data-i18n="note2_b">Клиническая особенность:</b> <span data-i18n="note2_text">дефицит В12, в отличие от дефицита фолиевой кислоты, может сопровождаться неврологическими нарушениями (нарушение чувствительности, шаткость походки), поэтому его важно не пропустить.</span>
+    </div>
+  </div>
+
+  <div class="lec-section" id="hemolytic">
+    <span class="sec-eyebrow mono" data-i18n="s5_eyebrow">РАЗДЕЛ 05</span>
+    <h2 data-i18n="s5_h2">Гемолитические анемии</h2>
+    <p data-i18n="s5_p1">Развиваются при повышенном разрушении эритроцитов, которое превышает компенсаторные возможности костного мозга. Делятся на наследственные и приобретённые.</p>
+    <ul>
+      <li data-i18n="s5_li1">Наследственные: серповидноклеточная анемия, талассемия, дефицит Г-6-ФД</li>
+      <li data-i18n="s5_li2">Приобретённые: аутоиммунный гемолиз, механическое повреждение эритроцитов, реакция на лекарства</li>
+    </ul>
+    <p data-i18n="s5_p2">Характерные лабораторные признаки гемолиза: повышение непрямого билирубина, повышение лактатдегидрогеназы (ЛДГ), снижение гаптоглобина, повышение количества ретикулоцитов.</p>
+  </div>
+
+  <div class="lec-section" id="diagnosis">
+    <span class="sec-eyebrow mono" data-i18n="s6_eyebrow">РАЗДЕЛ 06</span>
+    <h2 data-i18n="s6_h2">Алгоритм диагностики</h2>
+    <p data-i18n="s6_p1">Базовый порядок действий при подозрении на анемию у пациента:</p>
+    <ol>
+      <li data-i18n="s6_ol1">Подтвердить анемию по общему анализу крови (Hb, эритроциты, гематокрит)</li>
+      <li data-i18n="s6_ol2">Оценить MCV — определить, микро-, нормо- или макроцитарная анемия</li>
+      <li data-i18n="s6_ol3">Назначить целевые анализы в зависимости от типа: ферритин и железо при микроцитарной; В12 и фолиевую кислоту при макроцитарной; ретикулоциты и билирубин при подозрении на гемолиз</li>
+      <li data-i18n="s6_ol4">Сопоставить результаты с клинической картиной (жалобы, анамнез, осмотр)</li>
+      <li data-i18n="s6_ol5">Установить причину и назначить лечение, направленное на неё, а не только на симптом</li>
+    </ol>
+  </div>
+
+  <div class="lec-section" id="summary">
+    <span class="sec-eyebrow mono" data-i18n="s7_eyebrow">РАЗДЕЛ 07</span>
+    <h2 data-i18n="s7_h2">Ключевые выводы</h2>
+    <ul>
+      <li data-i18n="s7_li1">Анемия — это синдром, а не диагноз; всегда нужно искать причину</li>
+      <li data-i18n="s7_li2">MCV — быстрый и удобный ориентир для первичной классификации</li>
+      <li data-i18n="s7_li3">Железодефицитная анемия — самая частая, но не единственная причина микроцитарной анемии</li>
+      <li data-i18n="s7_li4">При дефиците В12 важно проверить неврологический статус</li>
+      <li data-i18n="s7_li5">Лечение должно быть направлено на причину, а не только на повышение гемоглобина</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer data-i18n="footer_text">
+  Учебный материал · требует проверки преподавателем перед использованием на занятиях
+</footer>
+
+<script>
+const translations = {
+  ru: {
+    back_label: "К списку лекций",
+    title: "Анемии: классификация, диагностика, лечение",
+    subtitle: "Лекция для студентов медицинских вузов. Разбираются основные виды анемий, алгоритм диагностического поиска и принципы терапии.",
+    meta_level: "Уровень: базовый курс терапии",
+    meta_time: "Время: ~40 минут",
+    disclaimer_text: "Черновой учебный материал, подготовленный для предварительного ознакомления. Перед использованием на занятиях требует проверки преподавателем или специалистом — клинические рекомендации и дозировки могут меняться.",
+    toc_label: "СОДЕРЖАНИЕ ЛЕКЦИИ",
+    toc1: "Определение и физиология", toc2: "Классификация анемий", toc3: "Железодефицитная анемия",
+    toc4: "В12- и фолиеводефицитная анемия", toc5: "Гемолитические анемии", toc6: "Алгоритм диагностики", toc7: "Ключевые выводы",
+    s1_eyebrow: "РАЗДЕЛ 01", s1_h2: "Определение и физиология",
+    s1_p1: "Анемия — снижение концентрации гемоглобина в крови ниже нормы для возраста и пола, часто сопровождающееся снижением количества эритроцитов и гематокрита. Это не самостоятельная болезнь, а синдром, который может быть проявлением десятков разных состояний.",
+    s1_p2: "Основная функция эритроцитов — перенос кислорода от лёгких к тканям с помощью гемоглобина. При анемии способность крови переносить кислород снижается, и организм компенсирует это учащением сердцебиения и дыхания.",
+    t1_h1: "Показатель", t1_h2: "Норма (мужчины)", t1_h3: "Норма (женщины)", t1_r1c1: "Гемоглобин (Hb)", t1_r2c1: "Эритроциты", t1_r3c1: "Гематокрит",
+    note1_b: "Важно:", note1_text: "диагноз анемии ставится по уровню гемоглобина и гематокрита, а её причина устанавливается дальнейшим обследованием — это две разные задачи.",
+    s2_eyebrow: "РАЗДЕЛ 02", s2_h2: "Классификация анемий",
+    s2_p1: "Анемии классифицируют по нескольким признакам одновременно — это помогает быстрее сузить диагностический поиск.",
+    s2_h3a: "По размеру эритроцитов (MCV)",
+    s2_li1: "Микроцитарная (MCV < 80 фл) — чаще железодефицитная, талассемия",
+    s2_li2: "Нормоцитарная (MCV 80–100 фл) — анемия при хронических заболеваниях, острая кровопотеря, гемолиз",
+    s2_li3: "Макроцитарная (MCV > 100 фл) — В12-дефицитная, фолиеводефицитная анемия",
+    s2_h3b: "По механизму развития",
+    s2_li4: "Анемии вследствие кровопотери (острой или хронической)",
+    s2_li5: "Анемии вследствие нарушенного образования эритроцитов (дефицит железа, В12, фолиевой кислоты, угнетение костного мозга)",
+    s2_li6: "Анемии вследствие повышенного разрушения эритроцитов (гемолитические)",
+    s3_eyebrow: "РАЗДЕЛ 03", s3_h2: "Железодефицитная анемия",
+    s3_p1: "Самая частая форма анемии в мире. Развивается, когда расход или потеря железа превышает его поступление с пищей.",
+    s3_h3a: "Частые причины",
+    s3_li1: "Хроническая кровопотеря (обильные менструации, кровотечения из ЖКТ)",
+    s3_li2: "Повышенная потребность (беременность, рост у детей)",
+    s3_li3: "Недостаточное поступление железа с пищей",
+    s3_li4: "Нарушение всасывания железа (заболевания кишечника)",
+    s3_h3b: "Диагностика",
+    s3_p2: "Ключевые лабораторные признаки: снижение ферритина, снижение сывороточного железа, повышение общей железосвязывающей способности сыворотки (ОЖСС), микроцитарные гипохромные эритроциты в мазке крови.",
+    s3_h3c: "Принципы лечения",
+    s3_ol1: "Найти и устранить источник потери железа",
+    s3_ol2: "Назначить препараты железа внутрь (предпочтительно) или внутривенно при непереносимости/нарушении всасывания",
+    s3_ol3: "Контроль гемоглобина и ферритина в динамике для оценки эффективности терапии",
+    chip_micro: "Микроцитарная", chip_common: "Самая частая форма",
+    s4_eyebrow: "РАЗДЕЛ 04", s4_h2: "В12- и фолиеводефицитная анемия",
+    s4_p1: "Возникает из-за нарушения синтеза ДНК в созревающих эритроцитах, из-за чего они становятся крупными (макроцитоз) и не успевают полностью созреть.",
+    s4_h3a: "Частые причины дефицита В12",
+    s4_li1: "Пернициозная анемия (аутоиммунное поражение слизистой желудка, дефицит внутреннего фактора)",
+    s4_li2: "Состояние после резекции желудка или подвздошной кишки",
+    s4_li3: "Строгая вегетарианская/веганская диета без добавок",
+    note2_b: "Клиническая особенность:", note2_text: "дефицит В12, в отличие от дефицита фолиевой кислоты, может сопровождаться неврологическими нарушениями (нарушение чувствительности, шаткость походки), поэтому его важно не пропустить.",
+    s5_eyebrow: "РАЗДЕЛ 05", s5_h2: "Гемолитические анемии",
+    s5_p1: "Развиваются при повышенном разрушении эритроцитов, которое превышает компенсаторные возможности костного мозга. Делятся на наследственные и приобретённые.",
+    s5_li1: "Наследственные: серповидноклеточная анемия, талассемия, дефицит Г-6-ФД",
+    s5_li2: "Приобретённые: аутоиммунный гемолиз, механическое повреждение эритроцитов, реакция на лекарства",
+    s5_p2: "Характерные лабораторные признаки гемолиза: повышение непрямого билирубина, повышение лактатдегидрогеназы (ЛДГ), снижение гаптоглобина, повышение количества ретикулоцитов.",
+    s6_eyebrow: "РАЗДЕЛ 06", s6_h2: "Алгоритм диагностики",
+    s6_p1: "Базовый порядок действий при подозрении на анемию у пациента:",
+    s6_ol1: "Подтвердить анемию по общему анализу крови (Hb, эритроциты, гематокрит)",
+    s6_ol2: "Оценить MCV — определить, микро-, нормо- или макроцитарная анемия",
+    s6_ol3: "Назначить целевые анализы в зависимости от типа: ферритин и железо при микроцитарной; В12 и фолиевую кислоту при макроцитарной; ретикулоциты и билирубин при подозрении на гемолиз",
+    s6_ol4: "Сопоставить результаты с клинической картиной (жалобы, анамнез, осмотр)",
+    s6_ol5: "Установить причину и назначить лечение, направленное на неё, а не только на симптом",
+    s7_eyebrow: "РАЗДЕЛ 07", s7_h2: "Ключевые выводы",
+    s7_li1: "Анемия — это синдром, а не диагноз; всегда нужно искать причину",
+    s7_li2: "MCV — быстрый и удобный ориентир для первичной классификации",
+    s7_li3: "Железодефицитная анемия — самая частая, но не единственная причина микроцитарной анемии",
+    s7_li4: "При дефиците В12 важно проверить неврологический статус",
+    s7_li5: "Лечение должно быть направлено на причину, а не только на повышение гемоглобина",
+    footer_text: "Учебный материал · требует проверки преподавателем перед использованием на занятиях"
+  },
+  tj: {
+    back_label: "Ба рӯйхати лексияҳо",
+    title: "Камхунӣ: таснифот, ташхис, муолиҷа",
+    subtitle: "Лексия барои донишҷӯёни мактабҳои олии тиббӣ. Намудҳои асосии камхунӣ, алгоритми ташхис ва принсипҳои муолиҷа баррасӣ мешаванд.",
+    meta_level: "Сатҳ: курси асосии терапия",
+    meta_time: "Вақт: ~40 дақиқа",
+    disclaimer_text: "Маводи таълимии пешакӣ, барои шиноишавии аввалия таҳия шудааст. Пеш аз истифода дар дарсҳо бояд аз ҷониби устод ё мутахассис санҷида шавад — тавсияҳои клиникӣ ва вояҳо тағйир ёфта метавонанд.",
+    toc_label: "МАЗМУНИ ЛЕКСИЯ",
+    toc1: "Таъриф ва физиология", toc2: "Таснифи камхунӣ", toc3: "Камхунии норасоии оҳан",
+    toc4: "Камхунии норасоии В12 ва фолат", toc5: "Камхуниҳои гемолитикӣ", toc6: "Алгоритми ташхис", toc7: "Хулосаҳои асосӣ",
+    s1_eyebrow: "БАХШИ 01", s1_h2: "Таъриф ва физиология",
+    s1_p1: "Камхунӣ — пастшавии консентратсияи гемоглобин дар хун аз меъёри синну сол ва ҷинс, ки бо пастшавии шумораи эритроситҳо ва гематокрит ҳамроҳ мешавад. Ин бемории мустақил нест, балки синдром аст, ки дар даҳҳо ҳолатҳои гуногун пайдо мешавад.",
+    s1_p2: "Вазифаи асосии эритроситҳо — интиқоли оксиген аз шуш ба бофтаҳо бо ёрии гемоглобин. Ҳангоми камхунӣ қобилияти хун барои интиқоли оксиген паст мешавад ва бадан ин ҳолро бо тезшавии тапиши дил ва нафаскашӣ ҷуброн мекунад.",
+    t1_h1: "Нишондиҳанда", t1_h2: "Меъёр (мардон)", t1_h3: "Меъёр (занон)", t1_r1c1: "Гемоглобин (Hb)", t1_r2c1: "Эритроситҳо", t1_r3c1: "Гематокрит",
+    note1_b: "Муҳим:", note1_text: "ташхиси камхунӣ аз рӯи сатҳи гемоглобин ва гематокрит гузошта мешавад, аммо сабаби он бо муоинаи минбаъда муайян мегардад — ин ду вазифаи гуногун мебошанд.",
+    s2_eyebrow: "БАХШИ 02", s2_h2: "Таснифи камхунӣ",
+    s2_p1: "Камхуниҳо аз рӯи якчанд аломат якбора таснif мешаванд — ин ба тезтар маҳдуд кардани ҷустуҷӯи ташхисӣ мадад мекунад.",
+    s2_h3a: "Аз рӯи андозаи эритроситҳо (MCV)",
+    s2_li1: "Микроситарӣ (MCV < 80 фл) — бештар норасоии оҳан, талассемия",
+    s2_li2: "Нормоситарӣ (MCV 80–100 фл) — камхунӣ ҳангоми бемориҳои музмин, хунравии шадид, гемолиз",
+    s2_li3: "Макроситарӣ (MCV > 100 фл) — норасоии В12, норасоии фолат",
+    s2_h3b: "Аз рӯи механизми пайдоиш",
+    s2_li4: "Камхунӣ дар натиҷаи хунравӣ (шадид ё музмин)",
+    s2_li5: "Камхунӣ дар натиҷаи вайроншавии ҳосилшавии эритроситҳо (норасоии оҳан, В12, фолат, пастшавии фаъолияти мағзи устухон)",
+    s2_li6: "Камхунӣ дар натиҷаи зиёдшавии нобудшавии эритроситҳо (гемолитикӣ)",
+    s3_eyebrow: "БАХШИ 03", s3_h2: "Камхунии норасоии оҳан",
+    s3_p1: "Шакли бештар маъмули камхунӣ дар ҷаҳон. Вақте пайдо мешавад, ки сарфи ё гумшавии оҳан аз воридшавии он бо хӯрок зиёдтар бошад.",
+    s3_h3a: "Сабабҳои маъмул",
+    s3_li1: "Хунравии музмин (ҳайзи зиёд, хунравӣ аз рӯдаи ҳозима)",
+    s3_li2: "Эҳтиёҷоти зиёдшуда (ҳомиладорӣ, инкишофи кӯдакон)",
+    s3_li3: "Воридшавии нокифояи оҳан бо хӯрок",
+    s3_li4: "Вайроншавии азхудкунии оҳан (бемориҳои рӯда)",
+    s3_h3b: "Ташхис",
+    s3_p2: "Аломатҳои асосии лабораторӣ: пастшавии ферритин, пастшавии оҳани зардоб, баландшавии қобилияти умумии пайвасткунии оҳан (ОЖСС), эритроситҳои микроситарии гипохромӣ дар маска.",
+    s3_h3c: "Принсипҳои муолиҷа",
+    s3_ol1: "Манбаи гумшавии оҳанро ёфтан ва бартараф кардан",
+    s3_ol2: "Таъин кардани доруҳои оҳан аз роҳи даҳон (бартарӣ дорад) ё дохили варид ҳангоми набурдани/вайроншавии азхудкунӣ",
+    s3_ol3: "Назорати гемоглобин ва ферритин дар динамика барои баҳодиҳии самаранокии муолиҷа",
+    chip_micro: "Микроситарӣ", chip_common: "Шакли бештар маъмул",
+    s4_eyebrow: "БАХШИ 04", s4_h2: "Камхунии норасоии В12 ва фолат",
+    s4_p1: "Дар натиҷаи вайроншавии синтези ДНК дар эритроситҳои дар ҳоли пухтарасӣ пайдо мешавад, бинобар ин онҳо калон мешаванд (макроситоз) ва пурра пухта намерасанд.",
+    s4_h3a: "Сабабҳои маъмули норасоии В12",
+    s4_li1: "Камхунии пернициозӣ (зарардидаи аутоиммунии луобпардаи меъда, норасоии омили дохилӣ)",
+    s4_li2: "Ҳолат пас аз резексияи меъда ё рӯдаи борик",
+    s4_li3: "Парҳези қаттиқи вегетарианӣ/веганӣ бе иловаҳо",
+    note2_b: "Хусусияти клиникӣ:", note2_text: "норасоии В12, бар хилофи норасоии фолат, метавонад бо ихтилолоти неврологӣ (вайроншавии ҳассосият, беқарории роҳравӣ) ҳамроҳ бошад, бинобар ин набояд аз назар дур монад.",
+    s5_eyebrow: "БАХШИ 05", s5_h2: "Камхуниҳои гемолитикӣ",
+    s5_p1: "Ҳангоми зиёдшавии нобудшавии эритроситҳо, ки аз имкониятҳои ҳамҷубронкунандаи мағзи устухон зиёдтар аст, пайдо мешаванд. Ба меросӣ ва пайдошуда тақсим мешаванд.",
+    s5_li1: "Меросӣ: камхунии ҳуҷайраи мисли коврак (серповидноклеточная), талассемия, норасоии Г-6-ФД",
+    s5_li2: "Пайдошуда: гемолизи аутоиммунӣ, зарари механикии эритроситҳо, аксуламал ба дору",
+    s5_p2: "Аломатҳои хоси лабораторӣ ҷамолизи: баландшавии билирубини ғайримустақим, баландшавии лактатдегидрогеназа (ЛДГ), пастшавии гаптоглобин, баландшавии шумораи ретикулоситҳо.",
+    s6_eyebrow: "БАХШИ 06", s6_h2: "Алгоритми ташхис",
+    s6_p1: "Тартиби асосии амалҳо ҳангоми гумони камхунӣ дар бемор:",
+    s6_ol1: "Камхуниро аз рӯи таҷлили умумии хун тасдиқ кардан (Hb, эритроситҳо, гематокрит)",
+    s6_ol2: "Бaҳодиҳии MCV — муайян кардани камхунии микро-, нормо- ё макроситарӣ",
+    s6_ol3: "Таъин кардани таҳлилҳои мақсаднок вобаста ба намуд: ферритин ва оҳан ҳангоми микроситарӣ; В12 ва фолат ҳангоми макроситарӣ; ретикулоситҳо ва билирубин ҳангоми гумони гемолиз",
+    s6_ol4: "Натиҷаҳоро бо манзараи клиникӣ муқоиса кардан (шикоятҳо, анамнез, муоина)",
+    s6_ol5: "Сабабро муайян кардан ва муолиҷаи ба он нигаронидашударо таъин кардан, на танҳо ба аломат",
+    s7_eyebrow: "БАХШИ 07", s7_h2: "Хулосаҳои асосӣ",
+    s7_li1: "Камхунӣ синдром аст, на ташхис; ҳамеша бояд сабабро ёфт",
+    s7_li2: "MCV — мизони тез ва осон барои таснифи аввалия",
+    s7_li3: "Камхунии норасоии оҳан — сабаби бештар маъмул, аммо на ягона сабаби камхунии микроситарӣ",
+    s7_li4: "Ҳангоми норасоии В12 муҳим аст статуси неврологиро санҷидан",
+    s7_li5: "Муолиҷа бояд ба сабаб нигаронида шавад, на танҳо ба баландшавии гемоглобин",
+    footer_text: "Маводи таълимӣ · пеш аз истифода дар дарсҳо бояд аз ҷониби устод санҷида шавад"
+  }
+};
+
+const switchEl = document.getElementById('langSwitch');
+function setLanguage(lang){
+  switchEl.setAttribute('data-lang', lang);
+  document.documentElement.setAttribute('lang', lang === 'ru' ? 'ru' : 'tg');
+  const dict = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.textContent = dict[key];
+  });
+}
+switchEl.querySelectorAll('button[data-lang-btn]').forEach(btn => {
+  btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang-btn')));
+});
+setLanguage('ru');
+
+// progress bar
+const fill = document.getElementById('progressFill');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  const p = h > 0 ? (window.scrollY / h) * 100 : 0;
+  fill.style.width = p + '%';
+});
+</script>
+
+</body>
+</html>
