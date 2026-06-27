@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Инфаркт миокарда / Сактаи дил — Лекция</title>
+<style>
+  :root{
+    --bg: #0B1220;
+    --bg-soft: #101A2E;
+    --panel: #131F38;
+    --panel-border: #1F3257;
+    --ink: #F5F5F0;
+    --ink-dim: #A8B3C7;
+    --alarm: #E5484D;
+    --alarm-soft: #5C2329;
+    --mint: #34D399;
+    --mint-soft: #143628;
+    --gold: #E0B45C;
+    --serif: "Source Serif 4", "Iowan Old Style", "Georgia", serif;
+    --sans: "Inter", "Segoe UI", system-ui, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", monospace;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x:hidden;
+  }
+
+  /* ============ ECG TOP BAR / LANGUAGE SWITCH ============ */
+  .ecg-bar{
+    position: sticky;
+    top:0;
+    z-index: 100;
+    background: linear-gradient(180deg, var(--bg) 70%, transparent);
+    border-bottom: 1px solid var(--panel-border);
+    backdrop-filter: blur(8px);
+  }
+
+  .ecg-track{
+    position:relative;
+    height: 64px;
+    display:flex;
+    align-items:center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .ecg-svg-wrap{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+  }
+
+  .ecg-svg-wrap svg{
+    width: 200%;
+    height: 100%;
+    animation: scrollECG 7s linear infinite;
+  }
+
+  @keyframes scrollECG{
+    from{ transform: translateX(0); }
+    to{ transform: translateX(-50%); }
+  }
+
+  .ecg-path{
+    fill:none;
+    stroke: var(--mint);
+    stroke-width: 2;
+    opacity: 0.55;
+  }
+  .ecg-path.st-elevated{
+    stroke: var(--alarm);
+    opacity: 0.85;
+  }
+
+  .lang-toggle{
+    position: relative;
+    z-index: 2;
+    margin-left:auto;
+    display:flex;
+    gap:2px;
+    background: rgba(11,18,32,0.7);
+    border: 1px solid var(--panel-border);
+    border-radius: 999px;
+    padding: 4px;
+  }
+
+  .lang-btn{
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border:none;
+    background: transparent;
+    color: var(--ink-dim);
+    cursor:pointer;
+    transition: all 0.25s ease;
+  }
+
+  .lang-btn.active{
+    background: var(--alarm);
+    color: #fff;
+  }
+
+  .brand{
+    position: relative;
+    z-index: 2;
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration:none;
+  }
+  .brand span{ color: var(--alarm); }
+
+  /* ============ HERO ============ */
+  .hero{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 72px 24px 56px;
+    position: relative;
+  }
+
+  .hero-eyebrow{
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--alarm);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom: 22px;
+  }
+
+  .pulse-dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background: var(--alarm);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(229,72,77,0.6); }
+    50%{ box-shadow: 0 0 0 6px rgba(229,72,77,0); }
+  }
+
+  .hero h1{
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    max-width: 14ch;
+  }
+
+  .hero h1 em{
+    font-style: normal;
+    color: var(--alarm);
+  }
+
+  .hero-sub{
+    margin-top: 22px;
+    font-size: 1.08rem;
+    color: var(--ink-dim);
+    max-width: 56ch;
+  }
+
+  .hero-stats{
+    display:flex;
+    gap: 36px;
+    margin-top: 44px;
+    flex-wrap: wrap;
+  }
+
+  .stat{
+    border-left: 2px solid var(--alarm-soft);
+    padding-left: 14px;
+  }
+  .stat .num{
+    font-family: var(--serif);
+    font-size: 1.9rem;
+    color: var(--ink);
+    display:block;
+  }
+  .stat .label{
+    font-size: 0.8rem;
+    color: var(--ink-dim);
+    max-width: 18ch;
+  }
+
+  /* ============ SECTION SYSTEM ============ */
+  .section{
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 64px 24px;
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .section-head{
+    display:flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .section-tag{
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space:nowrap;
+  }
+
+  .section-head h2{
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 600;
+  }
+
+  /* ---- Pathophys: occlusion diagram ---- */
+  .patho-grid{
+    display:grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 48px;
+    align-items:center;
+  }
+  @media (max-width: 760px){
+    .patho-grid{ grid-template-columns: 1fr; }
+  }
+
+  .vessel-diagram{
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 18px;
+    padding: 32px;
+  }
+
+  .vessel-diagram svg{ width:100%; height:auto; }
+
+  .patho-text p{
+    color: var(--ink-dim);
+    margin-bottom: 16px;
+    font-size: 1rem;
+  }
+  .patho-text strong{ color: var(--ink); font-weight: 600; }
+
+  /* ---- Symptom cards ---- */
+  .symptom-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+  }
+
+  .symptom-card{
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 22px;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .symptom-card:hover{
+    border-color: var(--alarm);
+    transform: translateY(-2px);
+  }
+
+  .symptom-card .icon{
+    width: 34px; height:34px;
+    margin-bottom: 14px;
+    color: var(--alarm);
+  }
+  .symptom-card h3{
+    font-size: 1.02rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .symptom-card p{
+    font-size: 0.9rem;
+    color: var(--ink-dim);
+  }
+
+  /* ---- Diagnostics timeline ---- */
+  .dx-timeline{
+    position: relative;
+    padding-left: 28px;
+    border-left: 2px solid var(--panel-border);
+  }
+  .dx-step{
+    position: relative;
+    padding-bottom: 38px;
+  }
+  .dx-step:last-child{ padding-bottom:0; }
+  .dx-step::before{
+    content:"";
+    position:absolute;
+    left: -34px;
+    top: 4px;
+    width: 12px; height:12px;
+    border-radius:50%;
+    background: var(--mint);
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--mint);
+  }
+  .dx-step .dx-time{
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--mint);
+    margin-bottom: 6px;
+    display:block;
+  }
+  .dx-step h3{
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+  }
+  .dx-step p{
+    color: var(--ink-dim);
+    font-size: 0.95rem;
+    max-width: 60ch;
+  }
+
+  /* ---- ECG pattern gallery ---- */
+  .ecg-gallery{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+    gap: 20px;
+  }
+  .ecg-card{
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .ecg-card svg{ width:100%; height:60px; margin-bottom: 14px; }
+  .ecg-card h4{ font-size: 0.95rem; margin-bottom:4px; }
+  .ecg-card p{ font-size: 0.85rem; color: var(--ink-dim); }
+
+  /* ---- Treatment: time is muscle ---- */
+  .time-muscle{
+    background: linear-gradient(135deg, var(--alarm-soft), var(--bg-soft));
+    border: 1px solid var(--alarm-soft);
+    border-radius: 20px;
+    padding: 40px;
+    text-align:center;
+    margin-bottom: 40px;
+  }
+  .time-muscle .big{
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    color: var(--ink);
+  }
+  .time-muscle .big strong{ color: var(--alarm); }
+  .time-muscle p{
+    color: var(--ink-dim);
+    margin-top: 10px;
+    max-width: 50ch;
+    margin-inline:auto;
+  }
+
+  .treat-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap: 18px;
+  }
+  .treat-card{
+    background: var(--panel);
+    border-left: 3px solid var(--mint);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 20px;
+  }
+  .treat-card h4{ font-size:0.95rem; margin-bottom:6px; }
+  .treat-card p{ font-size:0.85rem; color: var(--ink-dim); }
+
+  /* ---- Footer nav back ---- */
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color: var(--ink-dim);
+    text-decoration:none;
+    font-size:0.9rem;
+    font-family: var(--mono);
+  }
+  .back-link:hover{ color: var(--alarm); }
+
+  footer{
+    max-width:1100px;
+    margin:0 auto;
+    padding: 40px 24px 60px;
+    color: var(--ink-dim);
+    font-size: 0.82rem;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+
+  [data-lang]{ display:none; }
+  [data-lang].lang-active{ display: revert; }
+  .symptom-card[data-lang], .treat-card[data-lang], .dx-step[data-lang]{ display:none; }
+  .symptom-card.lang-active, .treat-card.lang-active, .dx-step.lang-active{ display: block; }
+
+  @media (prefers-reduced-motion: reduce){
+    .ecg-svg-wrap svg{ animation: none; }
+    .pulse-dot{ animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ecg-bar">
+  <div class="ecg-track">
+    <a href="index.html" class="brand">Med<span>Portal</span></a>
+    <div class="ecg-svg-wrap">
+      <svg viewBox="0 0 600 64" preserveAspectRatio="none">
+        <path class="ecg-path st-elevated" d="M0,32 L40,32 L48,32 L54,10 L60,32 L70,32 L78,2 L86,52 L94,32 L120,32 L128,18 L136,32 L160,32 L168,32 L174,10 L180,32 L190,32 L198,2 L206,52 L214,32 L240,32 L248,18 L256,32 L300,32 L340,32 L348,32 L354,10 L360,32 L370,32 L378,2 L386,52 L394,32 L420,32 L428,18 L436,32 L460,32 L468,32 L474,10 L480,32 L490,32 L498,2 L506,52 L514,32 L540,32 L548,18 L556,32 L600,32"/>
+      </svg>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn" data-set-lang="ru">RU</button>
+      <button class="lang-btn" data-set-lang="tj">TJ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-eyebrow" data-lang="ru">
+    <span class="pulse-dot"></span> ОСТРЫЙ КОРОНАРНЫЙ СИНДРОМ
+  </div>
+  <div class="hero-eyebrow" data-lang="tj">
+    <span class="pulse-dot"></span> СИНДРОМИ ШАДИДИ КОРОНАРӢ
+  </div>
+
+  <h1 data-lang="ru">Инфаркт <em>миокарда</em></h1>
+  <h1 data-lang="tj">Сактаи <em>дил</em></h1>
+
+  <p class="hero-sub" data-lang="ru">
+    Некроз участка сердечной мышцы вследствие острого прекращения кровотока по коронарной артерии. Каждая минута задержки — это потеря жизнеспособного миокарда.
+  </p>
+  <p class="hero-sub" data-lang="tj">
+    Некрозшавии қисми мушаки дил дар натиҷаи қатъ шудани ҳаракати хун дар рагҳои коронарӣ. Ҳар дақиқаи таъхир — гум шудани бофтаи зиндаи мушаки дил аст.
+  </p>
+
+  <div class="hero-stats">
+    <div class="stat" data-lang="ru">
+      <span class="num">90 мин</span>
+      <span class="label">«золотое окно» для реперфузии</span>
+    </div>
+    <div class="stat" data-lang="tj">
+      <span class="num">90 дақ.</span>
+      <span class="label">«тирезаи тиллоӣ» барои репперфузия</span>
+    </div>
+    <div class="stat" data-lang="ru">
+      <span class="num">1/3</span>
+      <span class="label">случаев — безболевая форма</span>
+    </div>
+    <div class="stat" data-lang="tj">
+      <span class="num">1/3</span>
+      <span class="label">ҳолатҳо — бидуни дард</span>
+    </div>
+    <div class="stat" data-lang="ru">
+      <span class="num">№1</span>
+      <span class="label">причина смертности в мире</span>
+    </div>
+    <div class="stat" data-lang="tj">
+      <span class="num">№1</span>
+      <span class="label">сабаби асосии фавт дар ҷаҳон</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ПАТОФИЗИОЛОГИЯ ============ -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-tag" data-lang="ru">01 / Механизм</span>
+    <span class="section-tag" data-lang="tj">01 / Механизм</span>
+    <h2 data-lang="ru">Патофизиология</h2>
+    <h2 data-lang="tj">Патофизиология</h2>
+  </div>
+
+  <div class="patho-grid">
+    <div class="vessel-diagram">
+      <svg viewBox="0 0 320 160">
+        <rect width="320" height="160" fill="none"/>
+        <path d="M10,80 Q80,40 150,80 Q220,120 310,80" stroke="#2A3F66" stroke-width="22" fill="none" stroke-linecap="round"/>
+        <path d="M10,80 Q80,40 150,80" stroke="var(--mint)" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.5"/>
+        <circle cx="150" cy="80" r="20" fill="var(--gold)" opacity="0.9"/>
+        <circle cx="150" cy="80" r="20" fill="none" stroke="#E5484D" stroke-width="2" stroke-dasharray="3 3"/>
+        <path d="M155,80 Q220,120 310,80" stroke="var(--alarm)" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="1 6" opacity="0.6"/>
+        <text x="150" y="50" fill="#E0B45C" font-size="11" text-anchor="middle" font-family="monospace">тромб / лахта</text>
+        <text x="40" y="115" fill="#A8B3C7" font-size="10" font-family="monospace">кровоток ✓</text>
+        <text x="230" y="135" fill="#A8B3C7" font-size="10" font-family="monospace">ишемия ✕</text>
+      </svg>
+    </div>
+
+    <div class="patho-text" data-lang="ru">
+      <p><strong>1. Атеросклеротическая бляшка</strong> в коронарной артерии разрывается — её покрышка истончается и трескается под действием воспаления и механического стресса.</p>
+      <p><strong>2. Тромбоз.</strong> На обнажённом липидном ядре бляшки активируются тромбоциты, формируется окклюзирующий тромб.</p>
+      <p><strong>3. Ишемия и некроз.</strong> Кровоток прекращается — кардиомиоциты лишаются кислорода. Через 20–40 минут начинается необратимый некроз, распространяющийся от эндокарда к эпикарду («волновой фронт»).</p>
+    </div>
+    <div class="patho-text" data-lang="tj">
+      <p><strong>1. Тарканидани плаки атеросклеротикӣ.</strong> Пардаи болоии плак дар рагҳои коронарӣ зери таъсири илтиҳоб ва фишори механикӣ тунук ва дарида мешавад.</p>
+      <p><strong>2. Тромбоз.</strong> Дар болои ядрои липидии плак тромбоситҳо фаъол мешаванд ва тромби пӯшонандаи рагро ташкил медиҳанд.</p>
+      <p><strong>3. Ишемия ва некроз.</strong> Ҳаракати хун қатъ мешавад — кардиомиоситҳо аз оксиген бе баҳра мемонанд. Баъди 20–40 дақиқа некрози бебозгашт сар мешавад, ки аз эндокард ба эпикард паҳн мегардад («пешрафти мавчӣ»).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ КЛИНИКА ============ -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-tag" data-lang="ru">02 / Клиника</span>
+    <span class="section-tag" data-lang="tj">02 / Клиника</span>
+    <h2 data-lang="ru">Симптомы</h2>
+    <h2 data-lang="tj">Аломатҳо</h2>
+  </div>
+
+  <div class="symptom-grid">
+    <div class="symptom-card lang-active" data-lang="ru">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-8-4.5-8-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.5-8 11-8 11" stroke-linecap="round"/></svg>
+      <h3>Загрудинная боль</h3>
+      <p>Сжимающая, давящая, &gt;20 мин, отдаёт в левую руку, челюсть, спину. Не снимается нитроглицерином.</p>
+    </div>
+    <div class="symptom-card" data-lang="tj">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-8-4.5-8-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.5-8 11-8 11" stroke-linecap="round"/></svg>
+      <h3>Дарди пушти сина</h3>
+      <p>Фишоранда, &gt;20 дақ., ба дасти чап, ҷоғ, пушт интишор меёбад. Бо нитроглицерин нагирад.</p>
+    </div>
+
+    <div class="symptom-card lang-active" data-lang="ru">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round"/></svg>
+      <h3>Одышка</h3>
+      <p>Связана с острой левожелудочковой недостаточностью, может быть единственным симптомом у пожилых.</p>
+    </div>
+    <div class="symptom-card" data-lang="tj">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round"/></svg>
+      <h3>Нафастангӣ</h3>
+      <p>Бо норасоии шадиди желудочаи чап алоқаманд аст, дар пиронсолон танҳо аломат буда метавонад.</p>
+    </div>
+
+    <div class="symptom-card lang-active" data-lang="ru">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l2 8 4-16 2 8h6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3>Холодный пот, тошнота</h3>
+      <p>Вегетативная реакция: бледность, потливость, рвота — особенно при нижнем инфаркте.</p>
+    </div>
+    <div class="symptom-card" data-lang="tj">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l2 8 4-16 2 8h6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3>Арақи хунук, дилбеҳузурӣ</h3>
+      <p>Реаксияи вегетативӣ: рангпарӣ, арақкунӣ, қай — бавижа дар сактаи поёнӣ.</p>
+    </div>
+
+    <div class="symptom-card lang-active" data-lang="ru">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z"/><path d="M12 6v6l4 2"/></svg>
+      <h3>Атипичные формы</h3>
+      <p>Безболевая (у диабетиков), абдоминальная, астматическая, аритмическая — до 1/3 случаев.</p>
+    </div>
+    <div class="symptom-card" data-lang="tj">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z"/><path d="M12 6v6l4 2"/></svg>
+      <h3>Шаклҳои атипикӣ</h3>
+      <p>Бидуни дард (дар диабетикон), шикамӣ, астмавӣ, аритмиявӣ — то 1/3 ҳолатҳо.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ЭКГ-ПАТТЕРНЫ ============ -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-tag" data-lang="ru">03 / ЭКГ</span>
+    <span class="section-tag" data-lang="tj">03 / ЭКГ</span>
+    <h2 data-lang="ru">Диагностика: ЭКГ-паттерны</h2>
+    <h2 data-lang="tj">Ташхис: намунаҳои ЭКГ</h2>
+  </div>
+
+  <div class="ecg-gallery">
+    <div class="ecg-card">
+      <svg viewBox="0 0 200 60"><path d="M0,30 L30,30 L36,30 L40,10 L44,30 L60,30 L66,2 L72,50 L78,30 L100,30 L106,18 L112,30 L140,30 L146,30 L150,10 L154,30 L170,30 L176,2 L182,50 L188,30 L200,30" fill="none" stroke="#E5484D" stroke-width="2"/></svg>
+      <h4 data-lang="ru lang-active">Подъём ST (STEMI)</h4>
+      <h4 data-lang="tj">Баландшавии ST (STEMI)</h4>
+      <p data-lang="ru lang-active">Трансмуральная ишемия — полная окклюзия артерии. Показан немедленный ЧКВ/тромболизис.</p>
+      <p data-lang="tj">Ишемияи трансмуралӣ — баста шудани пурраи рагро нишон медиҳад. ЧКВ/тромболизис фавран лозим.</p>
+    </div>
+
+    <div class="ecg-card">
+      <svg viewBox="0 0 200 60"><path d="M0,30 L30,30 L36,30 L40,18 L44,30 L60,30 L66,22 L72,38 L78,30 L100,38 L106,38 L140,30 L146,30 L150,18 L154,30 L170,30 L176,22 L182,38 L188,30 L200,30" fill="none" stroke="#34D399" stroke-width="2"/></svg>
+      <h4 data-lang="ru lang-active">Депрессия ST / без подъёма</h4>
+      <h4 data-lang="tj">Пастшавии ST / бидуни баландшавӣ</h4>
+      <p data-lang="ru lang-active">NSTEMI — субэндокардиальная ишемия. Диагноз подтверждается тропонином.</p>
+      <p data-lang="tj">NSTEMI — ишемияи субэндокардиалӣ. Ташхис бо тропонин тасдиқ карда мешавад.</p>
+    </div>
+
+    <div class="ecg-card">
+      <svg viewBox="0 0 200 60"><path d="M0,30 L30,30 L40,30 L44,8 L48,30 L60,42 L75,42 L80,30 L100,30 L130,30 L140,30 L144,8 L148,30 L160,42 L175,42 L180,30 L200,30" fill="none" stroke="#E0B45C" stroke-width="2"/></svg>
+      <h4 data-lang="ru lang-active">Патологический зубец Q</h4>
+      <h4 data-lang="tj">Дандонаи патологии Q</h4>
+      <p data-lang="ru lang-active">Признак завершённого трансмурального некроза — формируется через часы–сутки.</p>
+      <p data-lang="tj">Нишонаи некрози трансмуралии анҷомёфта — дар муддати соатҳо–шабонарӯзҳо пайдо мешавад.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ДИАГНОСТИКА: ТАЙМЛАЙН ============ -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-tag" data-lang="ru">04 / Алгоритм</span>
+    <span class="section-tag" data-lang="tj">04 / Алгоритм</span>
+    <h2 data-lang="ru">Первые 90 минут</h2>
+    <h2 data-lang="tj">90 дақиқаи аввал</h2>
+  </div>
+
+  <div class="dx-timeline">
+    <div class="dx-step lang-active" data-lang="ru">
+      <span class="dx-time">0–10 мин</span>
+      <h3>ЭКГ в 12 отведениях</h3>
+      <p>Снимается у каждого пациента с подозрением на ОКС в первые 10 минут от обращения. Решает вопрос: STEMI или нет.</p>
+    </div>
+    <div class="dx-step" data-lang="tj">
+      <span class="dx-time">0–10 дақ.</span>
+      <h3>ЭКГ дар 12 кашидагӣ</h3>
+      <p>Дар 10 дақиқаи аввали муроҷиат барои ҳар як беморе, ки гумони ОКС дорад, гирифта мешавад. Масъалаи STEMI ё на ҳал мешавад.</p>
+    </div>
+
+    <div class="dx-step lang-active" data-lang="ru">
+      <span class="dx-time">0–60 мин</span>
+      <h3>Тропонин (высокочувствительный)</h3>
+      <p>Маркёр некроза миокарда. Повышается через 3–6 ч, пик — 12–24 ч. Динамика важнее однократного значения.</p>
+    </div>
+    <div class="dx-step" data-lang="tj">
+      <span class="dx-time">0–60 дақ.</span>
+      <h3>Тропонин (ҳассосияти баланд)</h3>
+      <p>Маркери некрози мушаки дил. Баъди 3–6 соат баланд мешавад, авҷ — 12–24 соат. Динамика аз як натиҷа муҳимтар аст.</p>
+    </div>
+
+    <div class="dx-step lang-active" data-lang="ru">
+      <span class="dx-time">≤90 мин</span>
+      <h3>Реперфузия</h3>
+      <p>При STEMI — первичное ЧКВ (предпочтительно) или тромболизис, если ЧКВ недоступен в течение 120 мин.</p>
+    </div>
+    <div class="dx-step" data-lang="tj">
+      <span class="dx-time">≤90 дақ.</span>
+      <h3>Репперфузия</h3>
+      <p>Дар STEMI — ЧКВ-и аввалиндараҷа (бартарӣ дорад) ё тромболизис, агар ЧКВ дар 120 дақиқа дастнорас бошад.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ЛЕЧЕНИЕ: TIME IS MUSCLE ============ -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-tag" data-lang="ru">05 / Терапия</span>
+    <span class="section-tag" data-lang="tj">05 / Терапия</span>
+    <h2 data-lang="ru">Лечение</h2>
+    <h2 data-lang="tj">Табобат</h2>
+  </div>
+
+  <div class="time-muscle" data-lang="ru">
+    <p class="big">Время — это <strong>мышца</strong>.</p>
+    <p>Каждые 30 минут задержки реперфузии повышают годовую смертность на ~7,5%. Решения должны приниматься быстро и протоколированно.</p>
+  </div>
+  <div class="time-muscle" data-lang="tj">
+    <p class="big">Вақт — ин <strong>мушак</strong> аст.</p>
+    <p>Ҳар 30 дақиқа таъхири репперфузия фавти яксолаи беморро тахминан ба 7,5% зиёд мекунад. Қарорҳо бояд зуд ва тибқи протокол қабул шаванд.</p>
+  </div>
+
+  <div class="treat-grid">
+    <div class="treat-card lang-active" data-lang="ru">
+      <h4>MONA-B (пересмотрено)</h4>
+      <p>Морфин (по показаниям), О₂ (только при SpO₂&lt;90%), Нитраты, Аспирин 300 мг, β-блокатор при стабильности.</p>
+    </div>
+    <div class="treat-card" data-lang="tj">
+      <h4>MONA-B (бознавишта)</h4>
+      <p>Морфин (бо нишонаҳо), О₂ (танҳо ҳангоми SpO₂&lt;90%), Нитратҳо, Аспирин 300 мг, β-блокатор ҳангоми устуворӣ.</p>
+    </div>
+
+    <div class="treat-card lang-active" data-lang="ru">
+      <h4>Двойная антиагрегантная терапия</h4>
+      <p>Аспирин + ингибитор P2Y12 (тикагрелор/клопидогрел) — нагрузочная доза немедленно.</p>
+    </div>
+    <div class="treat-card" data-lang="tj">
+      <h4>Терапияи дугоми антиагрегантӣ</h4>
+      <p>Аспирин + инҳибитори P2Y12 (тикагрелор/клопидогрел) — дозаи боркунанда фавран.</p>
+    </div>
+
+    <div class="treat-card lang-active" data-lang="ru">
+      <h4>Реперфузия</h4>
+      <p>Первичное ЧКВ — золотой стандарт при STEMI. Тромболизис — альтернатива при недоступности катетеризации.</p>
+    </div>
+    <div class="treat-card" data-lang="tj">
+      <h4>Репперфузия</h4>
+      <p>ЧКВ-и аввалиндараҷа — стандарти тиллоӣ дар STEMI. Тромболизис — алтернатива ҳангоми дастнорас будани катетеризация.</p>
+    </div>
+
+    <div class="treat-card lang-active" data-lang="ru">
+      <h4>Вторичная профилактика</h4>
+      <p>Статины высокой интенсивности, ИАПФ/БРА, β-блокатор длительно, контроль факторов риска.</p>
+    </div>
+    <div class="treat-card" data-lang="tj">
+      <h4>Пешгирии дуюмдараҷа</h4>
+      <p>Статинҳои шиддати баланд, ИАПФ/БРА, β-блокатор дарозмуддат, назорати омилҳои хавф.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="index.html" class="back-link" data-lang="ru lang-active">← Все лекции</a>
+  <a href="index.html" class="back-link" data-lang="tj">← Ҳама лексияҳо</a>
+  <span data-lang="ru lang-active">MedPortal · Учебный материал</span>
+  <span data-lang="tj">MedPortal · Маводи таълимӣ</span>
+</footer>
+
+<script>
+(function(){
+  const KEY = 'medportal-lang';
+  function applyLang(lang){
+    document.querySelectorAll('[data-lang]').forEach(el=>{
+      const langs = el.getAttribute('data-lang').split(' ').filter(x=>x!=='lang-active');
+      el.classList.toggle('lang-active', langs.includes(lang));
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn=>{
+      btn.classList.toggle('active', btn.dataset.setLang === lang);
+    });
+    document.documentElement.lang = lang === 'tj' ? 'tg' : 'ru';
+    try{ localStorage.setItem(KEY, lang); }catch(e){}
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> applyLang(btn.dataset.setLang));
+  });
+  let saved = 'ru';
+  try{ saved = localStorage.getItem(KEY) || 'ru'; }catch(e){}
+  applyLang(saved);
+})();
+</script>
+
+</body>
+</html>
